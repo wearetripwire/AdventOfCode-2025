@@ -14,31 +14,29 @@ var Day2 *cli.Command
 
 type Id string
 
-func (id Id) validate() bool {
-	for i := range id {
-		if i == 0 {
+func (id Id) validate(min int) bool {
+	// 2 parts
+	// remain evenly divisible
+	for i := 2; i <= len(id) && i <= min; i++ {
+		sliceSize := len(id) / i
+		if sliceSize*i != len(id) {
 			continue
 		}
-		if i > len(id)/2 {
-			// If we are at the halfway point and haven't found a repetition, we know that it MUST be valid
-			return true
-		}
-
-		pattern := id[:i]
-
+		pattern := string(id)[:sliceSize]
 		every := true
-		for j := (i * 2); j <= len(id); j += len(pattern) {
-			match := id[i:]
+		for j := sliceSize; j < len(id); j += sliceSize {
 
-			if pattern != match {
+			part := string(id)[j : j+sliceSize]
+
+			if pattern != part {
 				every = false
-				break
 			}
 		}
 		if every {
 			return false
 		}
 	}
+
 	return true
 }
 
@@ -88,7 +86,7 @@ func part1(input string) (int, error) {
 		invalids := []int{}
 		r.explode(
 			func(id Id) {
-				if !id.validate() {
+				if !id.validate(2) {
 					idNum, _ := strconv.Atoi(string(id))
 					invalids = append(invalids, idNum)
 					invalidCount += idNum
@@ -106,7 +104,32 @@ func part1(input string) (int, error) {
 }
 
 func part2(input string) (int, error) {
-	return 0, nil
+	ranges, err := splitRanges(input)
+	if err != nil {
+		return -1, err
+	}
+	rangeDiag := styles.MkTable().Headers("Start", "End", "InvalidIds")
+
+	invalidCount := 0
+	for _, r := range ranges {
+		invalids := []int{}
+		r.explode(
+			func(id Id) {
+				if !id.validate(len(id)) {
+					idNum, _ := strconv.Atoi(string(id))
+					invalids = append(invalids, idNum)
+					invalidCount += idNum
+				}
+			},
+		)
+		rangeDiag.Row(
+			fmt.Sprint(r.Start),
+			fmt.Sprint(r.End),
+			fmt.Sprintf("%v", invalids),
+		)
+	}
+	fmt.Println(rangeDiag)
+	return invalidCount, nil
 }
 
 func init() {
