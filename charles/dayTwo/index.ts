@@ -29,7 +29,7 @@ function getSumOfInvalidIDs(data: string) {
 function findInvalidIDs(low: number, high: number) {
   let invalidIDs: number[] = [];
   for (let current = low; current <= high; current++) {
-    if (current.toString().match(/\b(\d+)\1\b/)) {
+    if (current.toString().match(/\b(\d+)\1+\b/)) {
       invalidIDs.push(current);
     }
   }
