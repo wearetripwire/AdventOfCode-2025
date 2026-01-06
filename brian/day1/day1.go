@@ -1,14 +1,13 @@
 package day1
 
 import (
-	"context"
 	"fmt"
 	"math"
-	"os"
 	"strconv"
 	"strings"
 
 	"github.com/itsmebriand/aoc25/styles"
+	"github.com/itsmebriand/aoc25/utils"
 	"github.com/urfave/cli/v3"
 )
 
@@ -99,38 +98,9 @@ func part2(input string) (int, error) {
 var Day1 *cli.Command
 
 func init() {
-	Day1 = &cli.Command{
-		Name: "day1",
-		Action: func(ctx context.Context, c *cli.Command) error {
-			useFullInput := c.Root().Bool("full")
-			var input string
-			if useFullInput {
-				fmt.Println(styles.MkHeader("Day 1", "Real Data"))
-				r, err := os.ReadFile("./day1/input.txt")
-				if err != nil {
-					return err
-				}
-				input = string(r)
-			} else {
-				fmt.Println(styles.MkHeader("Day 1", "Test Data"))
-				r, err := os.ReadFile("./day1/test.txt")
-				if err != nil {
-					return err
-				}
-				input = string(r)
-			}
-			r1, err := part1(input)
-			if err != nil {
-				return err
-			}
-			fmt.Printf("Part 1: %d\n", r1)
-
-			r2, err := part2(input)
-			if err != nil {
-				return err
-			}
-			fmt.Printf("Part 2: %d\n", r2)
-			return nil
-		},
-	}
+	Day1 = utils.BaseDayCommand("Day 1", "day1", part1, part2, func(p1, p2 int) error {
+		fmt.Printf("Part 1: %d\n", p1)
+		fmt.Printf("Part 1: %d\n", p2)
+		return nil
+	})
 }

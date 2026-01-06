@@ -30,7 +30,7 @@ var (
 			Align(lipgloss.Center).
 			Bold(true).
 			Foreground(lipgloss.Color("205")).
-			Width(12).Align(lipgloss.Left).Padding(0, 2)
+			Align(lipgloss.Left).Padding(0, 2)
 	headerStyle = cellStyle.Bold(true).PaddingBottom(1)
 )
 
