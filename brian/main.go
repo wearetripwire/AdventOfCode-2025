@@ -7,6 +7,7 @@ import (
 
 	_ "github.com/itsmebriand/aoc25/day1"
 	_ "github.com/itsmebriand/aoc25/day2"
+	_ "github.com/itsmebriand/aoc25/day3"
 	"github.com/itsmebriand/aoc25/utils"
 	"github.com/urfave/cli/v3"
 )
