@@ -21,36 +21,37 @@ function displayOutput(joltages: number[], maxJoltage: number) {
 }
 function getJoltages(data: string) {
   let joltages: number[] = [];
-
   for (const battery of data.split("\n")) {
-    let first = getVoltage(battery, true);
-    let second = getVoltage(
-      battery.slice(battery.indexOf(first.toString()) + 1)
-    );
-    let voltage: string = `${first}${second}`;
+    let nextDigit = getVoltage(battery, 12);
+    let powerOverwhelming = nextDigit.toString();
+    let tempBattery = battery;
+    for (let i = 1; i <= 11; i++) {
+      tempBattery = tempBattery.slice(
+        tempBattery.indexOf(nextDigit.toString()) + 1
+      );
+      nextDigit = getVoltage(tempBattery, 12 - i);
+      powerOverwhelming += nextDigit.toString();
+    }
+
     console.log(
-      `In ${battery}, you can make the largest joltage possible, ${voltage}, by turning on batteries ${first} and ${second}.`
+      `In ${battery}, you can make the largest 12 digit joltage possible using ${powerOverwhelming}.`
     );
-    joltages.push(parseInt(voltage));
+    joltages.push(parseInt(powerOverwhelming));
   }
   return joltages;
 }
 
-function getVoltage(battery: string, enableLastDigitCheck = false) {
+function getVoltage(battery: string, limit: number) {
   let high: number = 0;
-  let prevHigh: number = 0;
+  let index = battery.length;
   for (const digit of battery) {
     if (high < parseInt(digit)) {
-      prevHigh = high;
       high = parseInt(digit);
     }
-  }
-  // only run on the first voltage digit
-  if (
-    battery.indexOf(high.toString()) + 1 === battery.length &&
-    enableLastDigitCheck
-  ) {
-    high = prevHigh;
+    if (index <= limit) {
+      break;
+    }
+    index--;
   }
   return high;
 }
