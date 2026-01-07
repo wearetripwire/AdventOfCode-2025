@@ -24,12 +24,12 @@ function getJoltages(data: string) {
   for (const battery of data.split("\n")) {
     let nextDigit = getVoltage(battery, 12);
     let powerOverwhelming = nextDigit.toString();
-    let tempBattery = battery;
+    let remainingBatteryVoltage = battery;
     for (let i = 1; i <= 11; i++) {
-      tempBattery = tempBattery.slice(
-        tempBattery.indexOf(nextDigit.toString()) + 1
+      remainingBatteryVoltage = remainingBatteryVoltage.slice(
+        remainingBatteryVoltage.indexOf(nextDigit.toString()) + 1
       );
-      nextDigit = getVoltage(tempBattery, 12 - i);
+      nextDigit = getVoltage(remainingBatteryVoltage, 12 - i);
       powerOverwhelming += nextDigit.toString();
     }
 
