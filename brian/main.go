@@ -5,7 +5,9 @@ import (
 	"log"
 	"os"
 
-	"github.com/itsmebriand/aoc25/day1"
+	_ "github.com/itsmebriand/aoc25/day1"
+	_ "github.com/itsmebriand/aoc25/day2"
+	"github.com/itsmebriand/aoc25/utils"
 	"github.com/urfave/cli/v3"
 )
 
@@ -21,9 +23,7 @@ func main() {
 				Local: false,
 			},
 		},
-		Commands: []*cli.Command{
-			day1.Day1,
-		},
+		Commands: utils.Commands,
 	}
 
 	if err := cmd.Run(context.Background(), os.Args); err != nil {
