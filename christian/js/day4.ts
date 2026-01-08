@@ -38,7 +38,7 @@ const readFileIn = (): string[] => {
 //      iterate through each item in each row
 //          set orbitCount to 0
 //          Check the items around it, iterating orbitCount if a roll is found
-//      if the orbitCount is < 4, iterate the total
+//      if the orbitCount is < 4, iterate the total (and optionally remove the roll from the map)
 const part1 = (
   rows: string[],
   part?: Part
@@ -78,6 +78,7 @@ const part1 = (
         if (rows[tempY][tempX] === ROLL_CHARACTER) {
           DEBUG && console.log("orbiting roll found at ", tempX, tempY);
           orbitCount++;
+          // no need to check other orbiting rolls if we are already above the threshold, break early.
           if (orbitCount >= ORBIT_THRESHOLD) break;
         }
       }
@@ -85,6 +86,7 @@ const part1 = (
       if (orbitCount < ORBIT_THRESHOLD) {
         DEBUG && console.log("found good roll at", x, y);
         total++;
+        // change the current character from a roll to an empty character
         if (part === Part.Two) {
           rows[y] =
             rows[y].substring(0, x) +
@@ -95,13 +97,13 @@ const part1 = (
     }
   }
 
-  console.log({ total });
+  DEBUG && console.log({ total });
   return { total, modifiedMap: rows };
 };
 
 // rerun part 1 over and over, updating the value of any removed roll to be an empty character.
 // stop once it iterates over the map and there are no changes to it.
-const part2 = (rows: string[]): void => {
+const part2 = (rows: string[]): number => {
   let runningTotal = 0;
 
   while (true) {
@@ -116,9 +118,9 @@ const part2 = (rows: string[]): void => {
     }
   }
 
-  console.log(runningTotal);
+  return runningTotal;
 };
 
 // MAIN
 const rows = readFileIn();
-part2(rows);
+console.log(part2(rows));
