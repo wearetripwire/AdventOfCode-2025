@@ -3,21 +3,11 @@ import fs from "node:fs/promises";
 let warehouse: {
   [key: number]: string[];
 } = {};
-let totalAccessiblePaperRolls = 0;
+let finalTotal = 0;
 await setupWarehouseInventory();
-console.log(warehouse);
-console.log("Mark movable bay's with an x");
-warehouse = findMovableRolls();
-console.log(warehouse);
-for (const aisle of Object.values(warehouse)) {
-  for (const bay of aisle) {
-    if (bay === "x") {
-      totalAccessiblePaperRolls++;
-    }
-  }
-}
+movePaper();
 console.log(
-  `Number of rolls of paper that can be accessed by a forklift: ${totalAccessiblePaperRolls}`
+  `Number of rolls of paper that can be accessed by a forklift: ${finalTotal}`
 );
 
 function findMovableRolls() {
@@ -104,4 +94,22 @@ async function setupWarehouseInventory() {
     currentAisle++;
   }
   return warehouse;
+}
+function movePaper() {
+  let totalAccessiblePaperRolls = 0;
+  warehouse = findMovableRolls();
+  for (const aisle of Object.values(warehouse)) {
+    for (const bay of aisle) {
+      if (bay === "x") {
+        totalAccessiblePaperRolls++;
+      }
+    }
+  }
+
+  finalTotal += totalAccessiblePaperRolls;
+  console.log(`Remove ${totalAccessiblePaperRolls} rolls of paper.`);
+  console.log(warehouse);
+  if (totalAccessiblePaperRolls !== 0) {
+    movePaper();
+  }
 }
